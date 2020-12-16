@@ -5,8 +5,6 @@ var eps     = require('ejs');
 var got     = require('got');
 var http = require('http');
 var url = require('url');
-var ippackage = require('ip');
-var os = require('os');
 
 app.engine('html', require('ejs').renderFile);
 
@@ -26,3 +24,12 @@ app.get('/', function (req, res)
   res.end();
   return;
 });
+
+// error handling
+app.use(function(err, req, res, next){
+  console.error(err.stack);
+  res.status(500).send('Something bad happened!');
+});
+
+app.listen(port, ip);
+console.log('Server running on ' + ip + ':' + port);

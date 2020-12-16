@@ -1,0 +1,26 @@
+{
+  "name": "link3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "dependencies": {
+    "express": "*",
+    "ejs": "*",
+    "got": "*",
+    "mysql": "*"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/utherp0/knativechain.git"
+  },
+  "author": "Uther",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/utherp0/knativechain/issues"
+  },
+  "homepage": "https://github.com/utherp0/knativechain#readme"
+}
