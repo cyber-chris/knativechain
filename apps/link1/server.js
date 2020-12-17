@@ -18,9 +18,17 @@ var ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
 // Comment for git testing again
 app.get('/', function (req, res)
 {
-  console.log( "Request received, serving GREEN....");
+  // Colour should be defined in an ENV, if not default to green
+  var colour = process.env["COLOUR"];
+
+  if( colour == null ) 
+  {
+    colour = "green";
+  }
+
+  console.log( "Request received, serving " + colour + "...");
   
-  res.write( "green");
+  res.write(colour);
   res.end();
   return;
 });
