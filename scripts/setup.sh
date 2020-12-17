@@ -1,0 +1,31 @@
+oc new-project chaintest
+oc create -f ../yaml/link1-is.yaml
+oc create -f ../yaml/link2-is.yaml
+oc create -f ../yaml/link3-is.yaml
+oc create -f ../yaml/link4-is.yaml
+oc create -f ../yaml/link1-bc.yaml
+oc create -f ../yaml/link2-bc.yaml
+oc create -f ../yaml/link3-bc.yaml
+oc create -f ../yaml/link4-bc.yaml
+oc start-build link1
+oc start-build link2
+oc start-build link3
+oc start-build link4
+kn service create link1 --image=image-registry.openshift-image-registry.svc:5000/chaintest/link1 --revision-name=v1
+kn service create link2 --image=image-registry.openshift-image-registry.svc:5000/chaintest/link2 --revision-name=v1
+kn service create link3 --image=image-registry.openshift-image-registry.svc:5000/chaintest/link3 --revision-name=v1
+kn service create link4 --image=image-registry.openshift-image-registry.svc:5000/chaintest/link4 --revision-name=v1
+kn service update link1 --revision-name=v2 --env COLOUR=blue
+kn service update link2 --revision-name=v2 --env COLOUR=yellow
+kn service update link3 --revision-name=v2 --env COLOUR=green
+kn service update link4 --revision-name=v2 --env COLOUR=red
+kn service update link1 --revision-name=v3 --env COLOUR=yellow
+kn service update link2 --revision-name=v3 --env COLOUR=blue
+kn service update link3 --revision-name=v3 --env COLOUR=red
+kn service update link4 --revision-name=v4 --env COLOUR=green
+kn service update link1 --traffic link1-v1=40,link1-v2=30,link1-v3=30
+kn service update link2 --traffic link2-v1=30,link2-v2=40,link2-v3=30
+kn service update link3 --traffic link3-v1=30,link3-v2=30,link3-v3=40
+kn service update link4 --traffic link4-v1=30,link4-v2=30,link4-v3=40
+
+

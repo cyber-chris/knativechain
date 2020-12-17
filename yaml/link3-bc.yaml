@@ -1,0 +1,24 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: link3
+spec:
+  output:
+    to:
+      kind: ImageStreamTag
+      name: link3:latest
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    contextDir: /apps/link3
+    git:
+      uri: https://github.com/utherp0/knativechain
+    type: Git
+  strategy:
+    sourceStrategy:
+      from:
+        kind: ImageStreamTag
+        name: nodejs:12-ubi7
+        namespace: openshift
+    type: Source
