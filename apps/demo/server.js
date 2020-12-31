@@ -2,12 +2,11 @@
 var express = require('express');
 var fs      = require('fs');
 var app     = express();
-var eps     = require('ejs');
+var ejs     = require('ejs');
 var got     = require('got');
-var mysql   = require('mysql');
 
-app.engine('html', require('ejs').renderFile);
-
+//app.engine('html', require('ejs').renderFile);
+app.set('view engine','ejs');
 app.use( '/scripts', express.static('scripts'));
 app.use( '/styles', express.static('styles'));
 app.use( '/images', express.static('images'));
@@ -15,84 +14,11 @@ app.use( '/images', express.static('images'));
 var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080;
 var ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
 
-// Get the DB parameters - yeah, fkat text for password is insanely silly
-var dbhost = process.env.DBHOST;
-var dbuser = process.env.DBUSER;
-var dbpassword = process.env.DBPASSWORD;
-
 // Comment for git testing again
 app.get('/', function (req, res)
 {
   console.log( "Request received....");
-  console.log("Demo time");
-  res.render('node_test.html');
-});
-
-// MySQL testing - requires a MySQL Pod running *and* an ENV set to the host (DBHOST)
-app.get('/dbcreate', function (req,res)
-{
-  console.log("DBCONNECT request received....");
-  console.log("Connection info set to " + dbhost + ":" + dbuser + ":" + dbpassword );
-
-  //var connection = mysql.createConnection({host:dbhost,user:dbuser,password:dbpassword,database:sampledb});
-  var connection = mysql.createConnection({host:dbhost,user:dbuser,password:dbpassword,database:sampledb});
-  console.log("Created connection object....");
-
-  connection.connect(function(err)
-  {
-    if( err )
-    {
-      console.log( "Failed to connect.");
-      throw err;
-    }
-
-    console.log( "Connected to host " + dbhost + "...." );
-
-    console.log( "Creating table customers....");
-    var sql = "CREATE TABLE customers (name VARCHAR(25), code VARCHAR(10))";
-    connection.query(sql, function (err, result) 
-    {
-      if (err) 
-      {
-        console.log( "Error occurred when attempting to create the table")
-        throw err;
-      }
-      console.log("Table created....");
-      console.log( "Inserting data into customers....");
-      sql = "INSERT INTO customers (name,code) VALUES ('uth','10')";
-      connection.query(sql, function (err, result) 
-      {
-        if (err) 
-        {
-          console.log( "Error occurred when attempting to write to the table")
-          throw err;
-        }
-        console.log("Data created....");
-        console.log( "Selecting data from customers....");
-        sql = "SELECT * FROM customers";
-        connection.query(sql, function (err, result) 
-        {
-          if (err) 
-          {
-            console.log( "Error occurred when attempting to select data")
-            throw err;
-          }
-          console.log("Results from select " + result );
-          console.log( "Dropping table customers....");
-          sql = "DROP TABLE customers";
-          connection.query(sql, function (err, result) 
-          {
-            if (err) 
-            {
-              console.log( "Error occurred when attempting to drop table")
-              throw err;
-            }
-            console.log("Dropped table customers...." );
-          });
-        });
-      });
-    });
-  });
+  res.render('pages/index');
 });
 
 app.get( '/envs', function (req,res) {

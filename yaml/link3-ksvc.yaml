@@ -1,0 +1,22 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:  
+  name: link3
+spec:
+  template:
+    metadata:
+      name: link3-v1    
+    spec:
+      containerConcurrency: 0
+      containers:
+      - image: image-registry.openshift-image-registry.svc:5000/chaintest/link3
+        name: user-container
+        readinessProbe:
+          successThreshold: 1
+          tcpSocket:
+            port: 0
+        resources: {}
+      timeoutSeconds: 10
+  traffic:
+  - latestRevision: true
+    percent: 100

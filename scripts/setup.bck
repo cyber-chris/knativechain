@@ -13,10 +13,10 @@ oc start-build link3
 oc start-build link4
 echo "Sleeping for 90 secs to allow build to complete..."
 sleep 90
-oc create -f ../yaml/link1-ksvc.yaml
-oc create -f ../yaml/link2-ksvc.yaml
-oc create -f ../yaml/link3-ksvc.yaml
-oc create -f ../yaml/link4-ksvc.yaml
+kn service create link1 --image=image-registry.openshift-image-registry.svc:5000/chaintest/link1 --revision-name=v1
+kn service create link2 --image=image-registry.openshift-image-registry.svc:5000/chaintest/link2 --revision-name=v1
+kn service create link3 --image=image-registry.openshift-image-registry.svc:5000/chaintest/link3 --revision-name=v1
+kn service create link4 --image=image-registry.openshift-image-registry.svc:5000/chaintest/link4 --revision-name=v1
 kn service update link1 --revision-name=v2 --env COLOUR=blue
 kn service update link2 --revision-name=v2 --env COLOUR=yellow
 kn service update link3 --revision-name=v2 --env COLOUR=green
