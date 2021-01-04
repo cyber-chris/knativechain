@@ -28,6 +28,7 @@ app.get('/', function (req, res)
 
   console.log( "Request received, serving " + colour + "...");
   
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.write(colour);  
   res.end();
   return;
