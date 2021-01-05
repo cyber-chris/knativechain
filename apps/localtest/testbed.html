@@ -1,0 +1,93 @@
+<html>
+  <head>
+    <title>Columns Test</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+
+      var uniqueID = 0;
+      var links = new Array();
+
+      function renderCols()
+      {
+        for( loop = 0; loop < 8; loop++ )
+        {
+          addition = "<span class='quarters' style='background-color:red' id='row" + loop + "col1'>Red</span>";
+          addition += "<span class='quarters' style='background-color:blue' id='row" + loop + "col2'>Blue</span>";
+          addition += "<span class='quarters' style='background-color:green' id='row" + loop + "col3'>Green</span>";
+          addition += "<span class='quarters' style='background-color:yellow' id='row" + loop + "col4'>Yellow</span>";
+          addition += "</span>";
+          document.getElementById("output").innerHTML += addition + "<br/>";
+        }
+      }
+
+      function dataFillRandom()
+      {
+        addition = "";
+
+        for( loop = 0; loop < 4; loop++ )
+        {
+          randomColour = Math.floor(Math.random()*16777215).toString(16);
+
+          addition += "<span class='quarters' style='background-color:" + randomColour + "' id='cell" + uniqueID++ + "'>" + uniqueID + "</span>";
+        }
+
+        addition += "</span>";
+
+        document.getElementById("output").innerHTML += addition + "<br/>";
+      }
+
+      function dataFill()
+      {
+        // Add the new row at the top
+        addition = "";
+
+        // Shuffle the links
+        links.sort(() => Math.random() - 0.5);
+
+        for( loop = 0; loop < 4; loop++ )
+        {
+          addition += "<span class='quarters' id='cell" + uniqueID++ + "'>LOADING</span>";
+          dataRequest( "cell" + ( uniqueID - 1), links[loop]);
+        }
+
+        addition += "<br/>";
+
+        document.getElementById("output").innerHTML = addition + document.getElementById("output").innerHTML;
+      }
+
+      function dataRequest( targetCell, targetLink )
+      {
+        $.ajax({url: targetLink, success: function( result ) 
+          {
+            document.getElementById( targetCell ).innerHTML = "FETCHED";
+            document.getElementById( targetCell ).style = "background-color:" + result;
+          }});      
+      }
+
+      function startFill()
+      {
+        // Load the links
+        links.push("http://link1-chaintest.apps.cluster-6726.6726.example.opentlc.com");
+        links.push("http://link2-chaintest.apps.cluster-6726.6726.example.opentlc.com");
+        links.push("http://link3-chaintest.apps.cluster-6726.6726.example.opentlc.com");
+        links.push("http://link4-chaintest.apps.cluster-6726.6726.example.opentlc.com");
+
+        setInterval( dataFill, 15000 );
+      }
+
+    </script>
+
+    <style>
+
+      span.quarters { height:20px; width:25%; display:inline-block; color:#404040; background-color:white; text-align:center }
+
+    </style>
+
+  </head>
+  <body onload="startFill();">
+    <h1>Cols Test</h1><br/>
+    <div id="output"></div>
+  </body>
+</html>
