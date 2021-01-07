@@ -2,8 +2,109 @@
 <html lang="en">
 <head>
     <%- include('../partials/head'); %>
+
+    <style>
+      span.quarters { height:20px; width:25%; display:inline-block; color:#404040; background-color:white; text-align:center }
+      span.quartersInfo { height:25px; width:20%; display:inline-block; color:#404040; background-color:white; border:1px; border-color: black; }
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+
+      var loomActive = false;
+      var fastestResp = 1000000;
+      var reqCount = 0;
+      var respCount = 0;
+      var averageResp = 0;
+      var uniqueID = 0;
+
+      var endpoints = new Array();
+
+      // onload init
+      function init()
+      {
+        // Populate the links from the templated hidden form elements (EJS won't template into script blocks)
+        endpoints.push(document.getElementById('link1url').value);
+        endpoints.push(document.getElementById('link2url').value);
+        endpoints.push(document.getElementById('link3url').value);
+        endpoints.push(document.getElementById('link4url').value);
+
+        console.log( endpoints[0], endpoints[1], endpoints[2], endpoints[3]);
+
+        // Start the data generation interval
+        setInterval( dataRow, 15000 );
+      }
+
+      // Metrics update
+      function updateMetrics()
+      {
+        document.getElementById('reqCount').innerHTML = "Reqs: <b>" + reqCount + "</b>";
+        document.getElementById('resCount').innerHTML = "Resps: <b>" + respCount + "</b>";
+        document.getElementById('avgResp').innerHTML = "Avg Resp: <b>" + Math.round(averageResp) + "ms</b>";
+        document.getElementById('fastest').innerHTML = "Fastest Resp: <b>" + fastestResp + "ms</b>";
+      }
+
+      // Generic data request function - requires a target URL and a target ID for the cell to fill
+      function dataRequest( targetCell, targetLink )
+      {
+        reqCount++;
+        start = Date.now();
+
+        $.ajax({url: targetLink, success: function( result ) 
+          {
+            respCount++;
+            document.getElementById( targetCell ).innerHTML = "";
+            document.getElementById( targetCell ).style = "background-color:" + result;
+
+            elapsed = Date.now() - start;
+
+            if( elapsed < fastestResp ) fastestResp = elapsed;
+
+            averageResp = (( averageResp * ( respCount - 1 ) ) + elapsed) / respCount;
+
+          }}); 
+          
+        updateMetrics();
+      }
+
+      // Data Row generator
+      function dataRow()
+      {
+        // If the loom is paused bail now
+        if( !loomActive ) return;
+
+        addition = "";
+
+        // Otherwise generate a new row at the top of the loom
+        for( loop = 0; loop < 4; loop++ )
+        {
+          addition += "<span class='quarters' id='cell" + uniqueID++ + "'>LOADING</span>";
+          dataRequest( "cell" + ( uniqueID - 1), endpoints[getRandomInt(4)]);
+        }
+
+        addition += "<br/>";
+
+        document.getElementById("output").innerHTML = addition + document.getElementById("output").innerHTML;
+      }
+
+      // UI event handlers.
+      function changeLoomState()
+      {
+        loomActive = !loomActive;
+
+        document.getElementById("state").value = ( document.getElementById("state").value == "Start Loom" ? "Pause Loom" : "Start Loom");
+      }
+
+      // Bounded random function
+      function getRandomInt( max ) 
+      {
+        return Math.floor(Math.random() * Math.floor(max));
+      }
+
+    </script>
 </head>
-<body class="container">
+<body class="container" onload="init();">
 
 <header>
     <%- include('../partials/header'); %>
@@ -13,7 +114,16 @@
     <div class="jumbotron">
         <h1>Demonstrating knative behaviour using OCP4.6</h1>
         <p>Loom demo</p>
+        <span class="quartersInfo" id="reqCount">Reqs:</span>
+        <span class="quartersInfo" id="resCount">Resps:</span>
+        <span class="quartersInfo" id="avgResp">Avg Resp:</span>
+        <span class="quartersInfo" id="fastest">Fastest Resp:</span>
+        <div id="output"></div>
     </div>
+    <input type="hidden" id="link1url" value="<%= LINK1 %>"/>
+    <input type="hidden" id="link2url" value="<%= LINK2 %>"/>
+    <input type="hidden" id="link3url" value="<%= LINK3 %>"/>
+    <input type="hidden" id="link4url" value="<%= LINK4 %>"/>
 </main>
 
 <footer>

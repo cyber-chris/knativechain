@@ -17,8 +17,19 @@ var ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
 // Comment for git testing again
 app.get('/', function (req, res)
 {
+  // Get the links from ENV on every call to make it updateable
+  link1 = process.env.LINK1URL;
+  link2 = process.env.LINK2URL;
+  link3 = process.env.LINK3URL;
+  link4 = process.env.LINK4URL;
+
   console.log( "Request received....");
-  res.render('pages/index');
+  res.render('pages/index', {
+    LINK1: link1,
+    LINK2: link2,
+    LINK3: link3,
+    LINK4: link4
+  });
 });
 
 app.get( '/envs', function (req,res) {
