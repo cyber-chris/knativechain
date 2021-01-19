@@ -39,7 +39,7 @@ echo "Exporting the URL endpoints for the microservices for the demo app"
 export LINK1URL=$(oc get ksvc/link1 -o jsonpath='{.status.url}')
 export LINK2URL=$(oc get ksvc/link2 -o jsonpath='{.status.url}')
 export LINK3URL=$(oc get ksvc/link3 -o jsonpath='{.status.url}')
-export LINK4URL=$(oc get ksvc/link1 -o jsonpath='{.status.url}')
+export LINK4URL=$(oc get ksvc/link4 -o jsonpath='{.status.url}')
 echo "Creating the demotest project"
 oc new-project demotest
 echo "Creating the application from utherp0 git repo (change as necessary)"
