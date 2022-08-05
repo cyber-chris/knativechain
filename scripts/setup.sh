@@ -1,5 +1,3 @@
-echo "Creating the chaintest project"
-oc new-project chaintest
 echo "Creating imagestreams and buildconfigs"
 oc create -f ../yaml/link1-is.yaml
 oc create -f ../yaml/link2-is.yaml

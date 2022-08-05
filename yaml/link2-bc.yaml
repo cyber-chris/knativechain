@@ -19,6 +19,6 @@ spec:
     sourceStrategy:
       from:
         kind: ImageStreamTag
-        name: nodejs:12-ubi7
+        name: nodejs:14-ubi8
         namespace: openshift
     type: Source
