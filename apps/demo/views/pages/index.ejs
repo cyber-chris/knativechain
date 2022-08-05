@@ -77,7 +77,7 @@
         addition = "";
 
         // Otherwise generate a new row at the top of the loom
-        for( loop = 0; loop < 4; loop++ )
+        for( loop = 0; loop < 8; loop++ )
         {
           addition += "<span class='quarters' id='cell" + uniqueID++ + "'>LOADING</span>";
           dataRequest( "cell" + ( uniqueID - 1), endpoints[getRandomInt(4)]);
